@@ -7,7 +7,7 @@ use mimalloc::MiMalloc;
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
-static DEFAULT_DELIMITER: &[char] = &[' ', '\t'];
+const DEFAULT_DELIMITER: &[char] = &[' ', '\t'];
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     unsafe {
