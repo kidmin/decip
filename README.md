@@ -1,6 +1,6 @@
 # decip
 
-a helper command to `sort(1)` by IPv4/IPv6 address
+a helper command to `sort(1)` by IPv4/IPv6 address with decorating in hex format
 
 ## example usage
 
