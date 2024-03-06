@@ -40,32 +40,29 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut outfh = std::io::BufWriter::new(std::io::stdout().lock());
 
     for l in std::io::BufReader::new(std::io::stdin().lock()).lines() {
-        if let Ok(line) = l {
-            let ipaddr_str =
-                if opt_rflag {
-                    match line.rsplit_once(delimiter_char) {
-                        Some((_, ipaddr_str)) => ipaddr_str,
-                        None => &line,
-                    }
-                } else {
-                    match line.split_once(delimiter_char) {
-                        Some((ipaddr_str, _)) => ipaddr_str,
-                        None => &line,
-                    }
+        let line = l?;
+        let ipaddr_str =
+            if opt_rflag {
+                match line.rsplit_once(delimiter_char) {
+                    Some((_, ipaddr_str)) => ipaddr_str,
+                    None => &line,
                 }
-            ;
+            } else {
+                match line.split_once(delimiter_char) {
+                    Some((ipaddr_str, _)) => ipaddr_str,
+                    None => &line,
+                }
+            }
+        ;
 
-            match IpAddr::from_str(ipaddr_str) {
-                Ok(IpAddr::V4(a)) =>
-                    writeln!(outfh, "4@{}\t{}", a.octets().map(|b| format!("{:02x}", b)).concat(), line)?,
-                Ok(IpAddr::V6(a)) =>
-                    writeln!(outfh, "6@{}\t{}", a.octets().map(|b| format!("{:02x}", b)).concat(), line)?,
-                Err(_) =>
-                    writeln!(outfh, "0@\t{}", line)?,
-            };
-        } else {
-            panic!("read from stdin failed");
-        }
+        match IpAddr::from_str(ipaddr_str) {
+            Ok(IpAddr::V4(a)) =>
+                writeln!(outfh, "4@{}\t{}", a.octets().map(|b| format!("{:02x}", b)).concat(), line)?,
+            Ok(IpAddr::V6(a)) =>
+                writeln!(outfh, "6@{}\t{}", a.octets().map(|b| format!("{:02x}", b)).concat(), line)?,
+            Err(_) =>
+                writeln!(outfh, "0@\t{}", line)?,
+        };
     }
 
     outfh.flush()?;
