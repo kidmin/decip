@@ -17,7 +17,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     let _progname = args[0].clone();
     let mut opts = getopts::Options::new();
-    let mut delimiter = vec!['\0'];
+    let mut delimiter = ['\0'];
     opts.optopt("d", "", "delimiter character", "DELIMITER");
     opts.optflag("r", "", "parse the rightmost element instead of the leftmost one");
     let matches = match opts.parse(&args[1..]) {
