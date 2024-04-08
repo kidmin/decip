@@ -134,22 +134,39 @@ fn delimiter_must_be_a_single_character() -> Result<(), Box<dyn std::error::Erro
 }
 
 #[test]
-#[ignore]
+#[cfg(not(target_os = "windows"))]
 fn write_to_devfull_fails() -> Result<(), Box<dyn std::error::Error>> {
-    let mut cmd = std::process::Command::cargo_bin("decip")?;
+    use std::io::{Read, Write};
+    use std::process::Stdio;
 
     let devfull_path = std::path::Path::new("/dev/full");
     let devfull_fh = match std::fs::File::create(&devfull_path) {
         Ok(fh) => fh,
         Err(e) => panic!("couldn't open {}: {}", devfull_path.display(), e),
     };
-    // TODO
+
+    let mut cmd = std::process::Command::cargo_bin("decip")?;
+
+    cmd.stdin(Stdio::piped());
     cmd.stdout(devfull_fh);
-    let mut cmd = Command::from_std(cmd);
-    cmd.write_stdin("foo\n")
-        .assert()
-        .failure()
-        .stderr(predicate::str::contains(" kind: StorageFull,"));
+    cmd.stderr(Stdio::piped());
+    let mut child = cmd.spawn()?;
+
+    let mut stdin = child.stdin.take().unwrap();
+    std::thread::spawn(move || {
+        stdin.write_all("foo".as_bytes()).unwrap();
+    });
+
+    let mut stderr_buffer = Vec::new();
+    child.stderr.take().unwrap().read_to_end(&mut stderr_buffer)?;
+    let stderr_str = String::from_utf8(stderr_buffer)?;
+
+    let status = child.wait()?;
+    let exit_status_code = status.code().expect("unexpectedly terminated by a signal");
+
+    assert_ne!(exit_status_code, 0, "expect: unsuccess, actual: success (exit code = 0)\n(stderr=\n---\n{}---\n)", stderr_str);
+
+    assert!(stderr_str.contains(" kind: StorageFull,"));
 
     Ok(())
 }
