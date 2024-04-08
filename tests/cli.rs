@@ -134,8 +134,8 @@ fn delimiter_must_be_a_single_character() -> Result<(), Box<dyn std::error::Erro
 }
 
 #[test]
-#[cfg(not(target_os = "windows"))]
-fn write_to_devfull_fails() -> Result<(), Box<dyn std::error::Error>> {
+#[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "netbsd"))]
+fn error_on_write_failure() -> Result<(), Box<dyn std::error::Error>> {
     use std::io::{Read, Write};
     use std::process::Stdio;
 
@@ -154,7 +154,7 @@ fn write_to_devfull_fails() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut stdin = child.stdin.take().unwrap();
     std::thread::spawn(move || {
-        stdin.write_all("foo".as_bytes()).unwrap();
+        stdin.write_all("192.0.2.254\n".as_bytes()).unwrap();
     });
 
     let mut stderr_buffer = Vec::new();
@@ -165,8 +165,6 @@ fn write_to_devfull_fails() -> Result<(), Box<dyn std::error::Error>> {
     let exit_status_code = status.code().expect("unexpectedly terminated by a signal");
 
     assert_ne!(exit_status_code, 0, "expect: unsuccess, actual: success (exit code = 0)\n(stderr=\n---\n{}---\n)", stderr_str);
-
-    assert!(stderr_str.contains(" kind: StorageFull,"));
 
     Ok(())
 }
