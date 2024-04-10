@@ -9,7 +9,7 @@ fn parse_ipv4addr() -> Result<(), Box<dyn std::error::Error>> {
     cmd.write_stdin("192.0.2.254\n")
         .assert()
         .success()
-        .stdout("4@c00002fe\t192.0.2.254\n");
+        .stdout("4@O0005VG\t192.0.2.254\n");
 
     Ok(())
 }
@@ -21,7 +21,7 @@ fn parse_ipv6addr() -> Result<(), Box<dyn std::error::Error>> {
     cmd.write_stdin("2001:db8:feed::1:beef\n")
         .assert()
         .success()
-        .stdout("6@20010db8feed0000000000000001beef\t2001:db8:feed::1:beef\n");
+        .stdout("6@400GRE7UTK000000000000DUTS\t2001:db8:feed::1:beef\n");
 
     Ok(())
 }
@@ -46,8 +46,8 @@ fn default_delimiter_left() -> Result<(), Box<dyn std::error::Error>> {
                      2001:db8:feed::1:cafe\tstr2\n")
         .assert()
         .success()
-        .stdout("6@20010db8feed0000000000000001beef\t2001:db8:feed::1:beef str1\n\
-                 6@20010db8feed0000000000000001cafe\t2001:db8:feed::1:cafe\tstr2\n");
+        .stdout("6@400GRE7UTK000000000000DUTS\t2001:db8:feed::1:beef str1\n\
+                 6@400GRE7UTK000000000000EAVO\t2001:db8:feed::1:cafe\tstr2\n");
 
     Ok(())
 }
@@ -61,8 +61,8 @@ fn delimiter_from_arg_left() -> Result<(), Box<dyn std::error::Error>> {
                      2001:db8:feed::1:cafe,str2\n")
         .assert()
         .success()
-        .stdout("6@20010db8feed0000000000000001beef\t2001:db8:feed::1:beef,str1\n\
-                 6@20010db8feed0000000000000001cafe\t2001:db8:feed::1:cafe,str2\n");
+        .stdout("6@400GRE7UTK000000000000DUTS\t2001:db8:feed::1:beef,str1\n\
+                 6@400GRE7UTK000000000000EAVO\t2001:db8:feed::1:cafe,str2\n");
 
     Ok(())
 }
@@ -76,8 +76,8 @@ fn default_delimiter_right() -> Result<(), Box<dyn std::error::Error>> {
                      str2\t2001:db8:feed::1:cafe\n")
         .assert()
         .success()
-        .stdout("6@20010db8feed0000000000000001beef\tstr1 2001:db8:feed::1:beef\n\
-                 6@20010db8feed0000000000000001cafe\tstr2\t2001:db8:feed::1:cafe\n");
+        .stdout("6@400GRE7UTK000000000000DUTS\tstr1 2001:db8:feed::1:beef\n\
+                 6@400GRE7UTK000000000000EAVO\tstr2\t2001:db8:feed::1:cafe\n");
 
     Ok(())
 }
@@ -91,8 +91,8 @@ fn delimiter_from_arg_right() -> Result<(), Box<dyn std::error::Error>> {
                      str2,2001:db8:feed::1:cafe\n")
         .assert()
         .success()
-        .stdout("6@20010db8feed0000000000000001beef\tstr1,2001:db8:feed::1:beef\n\
-                 6@20010db8feed0000000000000001cafe\tstr2,2001:db8:feed::1:cafe\n");
+        .stdout("6@400GRE7UTK000000000000DUTS\tstr1,2001:db8:feed::1:beef\n\
+                 6@400GRE7UTK000000000000EAVO\tstr2,2001:db8:feed::1:cafe\n");
 
     Ok(())
 }

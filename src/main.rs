@@ -57,9 +57,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         match IpAddr::from_str(ipaddr_str) {
             Ok(IpAddr::V4(a)) =>
-                writeln!(outfh, "4@{}\t{}", a.octets().map(|b| format!("{:02x}", b)).concat(), line)?,
+                writeln!(outfh, "4@{}\t{}", data_encoding::BASE32HEX_NOPAD.encode(&a.octets()), line)?,
             Ok(IpAddr::V6(a)) =>
-                writeln!(outfh, "6@{}\t{}", a.octets().map(|b| format!("{:02x}", b)).concat(), line)?,
+                writeln!(outfh, "6@{}\t{}", data_encoding::BASE32HEX_NOPAD.encode(&a.octets()), line)?,
             Err(_) =>
                 writeln!(outfh, "0@\t{}", line)?,
         };
