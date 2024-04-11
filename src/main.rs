@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 use mimalloc::MiMalloc;
 #[global_allocator]
-static GLOBAL: MiMalloc = MiMalloc;
+static GLOBAL_MEMORY_ALLOCATOR: MiMalloc = MiMalloc;
 
 const DEFAULT_DELIMITER: &[char] = &[' ', '\t'];
 
