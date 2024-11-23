@@ -20,10 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut delimiter = [char::REPLACEMENT_CHARACTER];
     opts.optopt("d", "", "delimiter character", "DELIMITER");
     opts.optflag("r", "", "parse the rightmost element instead of the leftmost one");
-    let matches = match opts.parse(&args[1..]) {
-        Ok(m) => m,
-        Err(e) => Err(e)?,
-    };
+    let matches = opts.parse(&args[1..])?;
     let delimiter_char: &[char] = match matches.opt_str("d") {
         Some(s) => {
             let mut it = s.chars();
