@@ -120,7 +120,19 @@ fn delimiter_needs_an_argument() -> Result<(), Box<dyn std::error::Error>> {
     cmd.arg("-d");
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains(" missing"));
+        .stderr(predicate::str::contains("ArgumentMissing"));
+
+    Ok(())
+}
+
+#[test]
+fn delimiter_must_not_be_an_empty_string() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("decip")?;
+
+    cmd.arg("-d").arg("");
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains("delimiter is empty"));
 
     Ok(())
 }
