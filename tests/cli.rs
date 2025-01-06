@@ -168,7 +168,7 @@ fn error_on_write_failure() -> Result<(), Box<dyn std::error::Error>> {
     use std::process::Stdio;
 
     let devfull_path = std::path::Path::new("/dev/full");
-    let devfull_fh = match std::fs::File::create(&devfull_path) {
+    let devfull_fh = match std::fs::OpenOptions::new().write(true).open(&devfull_path) {
         Ok(fh) => fh,
         Err(e) => panic!("couldn't open {}: {}", devfull_path.display(), e),
     };
