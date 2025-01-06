@@ -43,11 +43,13 @@ fn default_delimiter_left() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("decip")?;
 
     cmd.write_stdin("2001:db8:feed::1:beef str1\n\
-                     2001:db8:feed::1:cafe\tstr2\n")
+                     2001:db8:feed::1:cafe\tstr2\n\
+                     str3\t2001:db8:feed::bad:feed\n")
         .assert()
         .success()
         .stdout("6@400GRE7UTK000000000000DUTS\t2001:db8:feed::1:beef str1\n\
-                 6@400GRE7UTK000000000000EAVO\t2001:db8:feed::1:cafe\tstr2\n");
+                 6@400GRE7UTK000000000000EAVO\t2001:db8:feed::1:cafe\tstr2\n\
+                 0@\tstr3\t2001:db8:feed::bad:feed\n");
 
     Ok(())
 }
@@ -58,11 +60,13 @@ fn delimiter_from_arg_left() -> Result<(), Box<dyn std::error::Error>> {
 
     cmd.arg("-d").arg(",");
     cmd.write_stdin("2001:db8:feed::1:beef,str1\n\
-                     2001:db8:feed::1:cafe,str2\n")
+                     2001:db8:feed::1:cafe,str2\n\
+                     str3,2001:db8:feed::bad:feed\n")
         .assert()
         .success()
         .stdout("6@400GRE7UTK000000000000DUTS\t2001:db8:feed::1:beef,str1\n\
-                 6@400GRE7UTK000000000000EAVO\t2001:db8:feed::1:cafe,str2\n");
+                 6@400GRE7UTK000000000000EAVO\t2001:db8:feed::1:cafe,str2\n\
+                 0@\tstr3,2001:db8:feed::bad:feed\n");
 
     Ok(())
 }
@@ -73,11 +77,13 @@ fn default_delimiter_right() -> Result<(), Box<dyn std::error::Error>> {
 
     cmd.arg("-r");
     cmd.write_stdin("str1 2001:db8:feed::1:beef\n\
-                     str2\t2001:db8:feed::1:cafe\n")
+                     str2\t2001:db8:feed::1:cafe\n\
+                     2001:db8:feed::bad:feed\tstr3\n")
         .assert()
         .success()
         .stdout("6@400GRE7UTK000000000000DUTS\tstr1 2001:db8:feed::1:beef\n\
-                 6@400GRE7UTK000000000000EAVO\tstr2\t2001:db8:feed::1:cafe\n");
+                 6@400GRE7UTK000000000000EAVO\tstr2\t2001:db8:feed::1:cafe\n\
+                 0@\t2001:db8:feed::bad:feed\tstr3\n");
 
     Ok(())
 }
@@ -88,11 +94,13 @@ fn delimiter_from_arg_right() -> Result<(), Box<dyn std::error::Error>> {
 
     cmd.arg("-r").arg("-d").arg(",");
     cmd.write_stdin("str1,2001:db8:feed::1:beef\n\
-                     str2,2001:db8:feed::1:cafe\n")
+                     str2,2001:db8:feed::1:cafe\n\
+                     2001:db8:feed::bad:feed,str3\n")
         .assert()
         .success()
         .stdout("6@400GRE7UTK000000000000DUTS\tstr1,2001:db8:feed::1:beef\n\
-                 6@400GRE7UTK000000000000EAVO\tstr2,2001:db8:feed::1:cafe\n");
+                 6@400GRE7UTK000000000000EAVO\tstr2,2001:db8:feed::1:cafe\n\
+                 0@\t2001:db8:feed::bad:feed,str3\n");
 
     Ok(())
 }
