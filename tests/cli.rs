@@ -103,12 +103,16 @@ fn odd_ipv4addr() -> Result<(), Box<dyn std::error::Error>> {
 
     cmd.write_stdin("192.0.2.0xff\n\
                      192.0.2.0120\n\
-                     192.0.513\n")
+                     192.0.513\n\
+                     0xc0000201\n\
+                     3221225985\n")
         .assert()
         .success()
         .stdout("0@\t192.0.2.0xff\n\
                  0@\t192.0.2.0120\n\
-                 0@\t192.0.513\n");
+                 0@\t192.0.513\n\
+                 0@\t0xc0000201\n\
+                 0@\t3221225985\n");
 
     Ok(())
 }
