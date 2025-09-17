@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 getopts = { version = "0.2" }
-data-encoding = { version = "2.5.0" }
+data-encoding = { version = "2.6.0" }
 mimalloc = { version = "*" }
 libc = { version = "*" }
 
